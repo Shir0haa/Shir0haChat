@@ -2,7 +2,6 @@ cmake_minimum_required(VERSION 3.21)
 
 project(ShirohaChat VERSION 0.1.0 LANGUAGES CXX)
 
-option(BUILD_TESTING "Build project tests" OFF)
 include(CTest)
 
 # C++20 标准
