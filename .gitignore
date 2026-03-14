@@ -1,0 +1,140 @@
+# CMake 构建文件
+build/
+build*/
+cmake-build-*/
+CMakeLists.txt.user
+CMakeCache.txt
+CMakeFiles/
+CMakeScripts/
+cmake_install.cmake
+install_manifest.cmake
+compile_commands.json
+CTestTestfile.cmake
+_deps/
+Makefile
+Makefile.*
+
+# Ninja 构建文件（用于 in-source 误构建时避免污染）
+build.ninja
+rules.ninja
+*.ninja
+.ninja_log
+.ninja_deps
+
+# Qt 特定文件
+*.autosave
+*.pro.user
+*.pro.user.*
+*.qmlc
+*.jsc
+*.qm
+.qmake.stash
+*.moc
+moc_*.cpp
+moc_*.h
+qrc_*.cpp
+ui_*.h
+object_script.*.Release
+object_script.*.Debug
+*_plugin_import.cpp
+/.qmake.cache
+/.qmake.stash
+*.moc.json
+*.qmltypes
+.qt/
+.qtc_clangd/
+.qmlls.ini
+*_autogen/
+*_aotstats/
+meta_types/
+qmltypes/
+
+# C++ 编译产物
+*.o
+*.obj
+*.so
+*.so.*
+*.dylib
+*.dll
+*.exe
+*.out
+*.a
+*.lib
+*.exp
+*.pdb
+*.ilk
+
+# 覆盖率/性能分析
+*.gcno
+*.gcda
+*.gcov
+*.profraw
+*.profdata
+coverage/
+
+# IDE 文件
+.vscode/
+*.code-workspace
+*.user
+*.user.*
+.idea/
+.qtc_clangd/
+.qtcreator/
+
+# CMake 用户预设（本地个性化配置）
+CMakeUserPresets.json
+CMakeUserPresets.json.user
+
+# 本地缓存
+.cache/
+.ccls-cache/
+compile_flags.txt
+
+# 操作系统文件
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+*~
+.directory
+
+# 临时文件
+*.log
+*.tmp
+*.temp
+*.swp
+*.swo
+
+# 调试和分析
+*.dSYM/
+*.su
+*.idb
+
+# 打包和分发
+*.dmg
+*.zip
+*.tar.gz
+*.rar
+*.deb
+*.rpm
+*.AppImage
+
+# 编辑器备份
+*.orig
+*.rej
+
+# 本地配置
+.env
+.env.local
+config.local.*
+
+*.db*
+.ace-tool/
+.claude/
+CLAUDE.md
+AGENTS.md
+GEMINI.md
+openspec/
