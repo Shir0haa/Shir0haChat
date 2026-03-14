@@ -9,7 +9,6 @@ add_library(shirohachat_shared_domain STATIC
     contact.cpp
     group.h
     group.cpp
-    group_member.h
     friend_request.h
     friend_request.cpp
     auth_state.h
