@@ -1,4 +1,9 @@
 import QtQuick
+import QtQuick.Controls
 
-Rectangle {
+Pane {
+    Label {
+        anchors.centerIn: parent
+        text: qsTr("Chat placeholder")
+    }
 }

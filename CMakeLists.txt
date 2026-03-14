@@ -2,19 +2,19 @@ cmake_minimum_required(VERSION 3.21)
 
 project(ShirohaChat VERSION 0.1.0 LANGUAGES CXX)
 
+option(BUILD_TESTING "Build project tests" OFF)
+include(CTest)
+
 # C++20 标准
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-# 生成 compile_commands.json 以便 clang-tidy/clangd 使用
-set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
-
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 set(CMAKE_AUTOUIC ON)
 
-find_package(Qt6 6.8 REQUIRED COMPONENTS
+set(SHIROHACHAT_QT_COMPONENTS
     Core
     Gui
     Qml
@@ -24,78 +24,35 @@ find_package(Qt6 6.8 REQUIRED COMPONENTS
     Sql
 )
 
+if(BUILD_TESTING)
+    list(APPEND SHIROHACHAT_QT_COMPONENTS Test)
+endif()
+
+find_package(Qt6 6.8 REQUIRED COMPONENTS ${SHIROHACHAT_QT_COMPONENTS})
+
 qt_standard_project_setup(REQUIRES 6.8)
 
-# 添加子目录
-add_subdirectory(src)
+# 为 Qt Creator / qmlls 生成 .qmlls.ini，避免 QML 编辑器提示自定义模块无法导入。
+# 该文件已在 .gitignore 中忽略，不会污染仓库提交。
+set(QT_QML_GENERATE_QMLLS_INI ON)
 
-# ----------------------------
-# Clang-Format / Clang-Tidy 集成
-# ----------------------------
+# 构建选项
+option(BUILD_CLIENT "Build client application" ON)
+option(BUILD_SERVER "Build server application" ON)
 
-# 可选启用 clang-tidy（默认开启，如未安装会自动跳过）
-option(ENABLE_CLANG_TIDY "Enable clang-tidy via CMAKE_CXX_CLANG_TIDY" ON)
-find_program(CLANG_TIDY_EXE NAMES clang-tidy)
-if(ENABLE_CLANG_TIDY AND CLANG_TIDY_EXE)
-    message(STATUS "clang-tidy found: ${CLANG_TIDY_EXE}")
-    # 让所有目标在编译时运行 clang-tidy（遵循 .clang-tidy 配置）
-    set(CMAKE_CXX_CLANG_TIDY "${CLANG_TIDY_EXE};-p=${CMAKE_BINARY_DIR};--format-style=file")
-else()
-    if(ENABLE_CLANG_TIDY)
-        message(STATUS "clang-tidy not found; skipping build-time analysis")
-    endif()
+# 共享层（始终构建）
+add_subdirectory(shared)
+
+# 客户端（目录存在时构建）
+if(BUILD_CLIENT AND EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/client")
+    add_subdirectory(client)
 endif()
 
-# 自定义格式化与静态检查目标
-find_program(CLANG_FORMAT_EXE NAMES clang-format)
-
-# 收集源文件用于格式化/检查（工具目标使用，非编译依赖）
-file(GLOB_RECURSE SHIROHA_ALL_SOURCES
-    CONFIGURE_DEPENDS
-    ${CMAKE_SOURCE_DIR}/src/*.cpp
-    ${CMAKE_SOURCE_DIR}/src/*.cxx
-    ${CMAKE_SOURCE_DIR}/src/*.cc
-    ${CMAKE_SOURCE_DIR}/src/*.c
-    ${CMAKE_SOURCE_DIR}/src/*.hpp
-    ${CMAKE_SOURCE_DIR}/src/*.hh
-    ${CMAKE_SOURCE_DIR}/src/*.hxx
-    ${CMAKE_SOURCE_DIR}/src/*.h
-)
-
-if(CLANG_FORMAT_EXE)
-    add_custom_target(format
-        COMMAND ${CLANG_FORMAT_EXE}
-            -i
-            --style=file
-            ${SHIROHA_ALL_SOURCES}
-        WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
-        COMMENT "Running clang-format on source files"
-        VERBATIM
-    )
-else()
-    add_custom_target(format
-        COMMAND ${CMAKE_COMMAND} -E echo "clang-format not found; install clang-format to use 'format' target."
-    )
+# 服务器（目录存在时构建）
+if(BUILD_SERVER AND EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/server")
+    add_subdirectory(server)
 endif()
 
-if(CLANG_TIDY_EXE)
-    add_custom_target(tidy
-        COMMAND ${CLANG_TIDY_EXE}
-            -p ${CMAKE_BINARY_DIR}
-            --format-style=file
-            ${SHIROHA_ALL_SOURCES}
-        WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
-        COMMENT "Running clang-tidy on source files"
-        VERBATIM
-    )
-else()
-    add_custom_target(tidy
-        COMMAND ${CMAKE_COMMAND} -E echo "clang-tidy not found; install clang-tidy to use 'tidy' target."
-    )
+if(BUILD_TESTING AND EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/tests")
+    add_subdirectory(tests)
 endif()
-
-# 便捷目标：一次性运行静态检查和格式化（注意 tidy 不会自动修复）
-add_custom_target(ci-lint
-    DEPENDS tidy format
-    COMMENT "Run clang-tidy and clang-format"
-)

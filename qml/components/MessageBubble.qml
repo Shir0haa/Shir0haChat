@@ -1,5 +1,13 @@
 import QtQuick
+import QtQuick.Controls
 
-Item {
-    height: 80
+Rectangle {
+    radius: 10
+    color: "#ecf0f1"
+    implicitHeight: 48
+
+    Label {
+        anchors.centerIn: parent
+        text: qsTr("Message placeholder")
+    }
 }
