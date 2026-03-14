@@ -1,19 +1,26 @@
 import QtQuick
 import QtQuick.Controls
+import QtQuick.Layouts
 
 Rectangle {
     id: root
-    property bool showBar: false
-    property bool isError: false
-    property string statusText: ""
 
-    visible: showBar
-    implicitHeight: showBar ? 36 : 0
-    color: isError ? "#ffeaa7" : "#dfe6e9"
+    required property bool showBar
+    required property bool isError
+    required property string statusText
 
-    Label {
+    height: showBar ? 32 : 0
+    clip: true
+    color: root.isError ? "#F44336" : "#FF9800"
+
+    Behavior on height {
+        NumberAnimation { duration: 200; easing.type: Easing.OutCubic }
+    }
+
+    Text {
         anchors.centerIn: parent
+        color: "white"
+        font.pixelSize: 13
         text: root.statusText
-        color: "#2d3436"
     }
 }

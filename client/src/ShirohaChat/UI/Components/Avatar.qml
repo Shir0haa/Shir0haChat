@@ -1,18 +1,18 @@
 import QtQuick
 
+// Avatar：头像组件（占位符）
 Rectangle {
     id: root
-    property string labelText: "SC"
+    width: 40
+    height: 40
+    radius: 20
+    color: "#ddd"
 
-    width: 36
-    height: 36
-    radius: width / 2
-    color: "#dfe6e9"
+    property string avatarUrl: ""
 
     Text {
         anchors.centerIn: parent
-        text: root.labelText
-        color: "#2d3436"
-        font.bold: true
+        text: "👤"
+        font.pixelSize: 24
     }
 }

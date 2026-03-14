@@ -1,38 +1,43 @@
+pragma ComponentBehavior: Bound
+
 import QtQuick
 import QtQuick.Controls
 
-Item {
+Popup {
     id: root
-    property string message: ""
 
-    implicitWidth: background.implicitWidth
-    implicitHeight: background.visible ? background.implicitHeight : 0
+    parent: Overlay.overlay
+    x: Math.round((parent.width - width) / 2)
+    y: parent.height - height - 40
 
-    Rectangle {
-        id: background
-        visible: root.message.length > 0
-        implicitWidth: Math.max(160, label.implicitWidth + 24)
-        implicitHeight: label.implicitHeight + 16
+    modal: false
+    focus: false
+    closePolicy: Popup.NoAutoClose
+
+    background: Rectangle {
+        color: "#333333"
         radius: 8
-        color: "#2f3640"
-        opacity: 0.9
+    }
 
-        Label {
-            id: label
-            anchors.centerIn: parent
-            text: root.message
-            color: "white"
-        }
+    contentItem: Label {
+        id: messageLabel
+        color: "white"
+        topPadding: 8
+        bottomPadding: 8
+        leftPadding: 12
+        rightPadding: 12
+        wrapMode: Text.WordWrap
     }
 
     Timer {
-        id: hideTimer
-        interval: 1200
-        onTriggered: root.message = ""
+        id: closeTimer
+        interval: 3000
+        onTriggered: root.close()
     }
 
-    function show(text) {
-        root.message = text
-        hideTimer.restart()
+    function show(message: string) {
+        messageLabel.text = message
+        root.open()
+        closeTimer.restart()
     }
 }
