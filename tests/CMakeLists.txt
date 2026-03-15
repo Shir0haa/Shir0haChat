@@ -10,14 +10,6 @@ if(NOT GTest_FOUND)
         "BUILD_TESTING=ON requires GoogleTest. Install GTest on this machine and reconfigure the project.")
 endif()
 
-if(TARGET shirohachat_shared_protocol)
-    add_subdirectory(shared)
-endif()
-
-if(TARGET shirohachat-server)
-    add_subdirectory(server)
-endif()
-
-if(TARGET shirohachat_core AND TARGET shirohachat_client_storage)
-    add_subdirectory(client)
-endif()
+add_subdirectory(shared)
+add_subdirectory(server)
+add_subdirectory(client)
